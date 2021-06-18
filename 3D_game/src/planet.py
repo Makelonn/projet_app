@@ -36,6 +36,11 @@ def update():   # update gets automatically called.
     rota_moon1.set_position(planet1.get_position(), relative_to=scene)
     rota_moon1.rotation_z = rota_moon1.rotation_z + 1.5*time.dt*100
 
+    sun.rotation_z = sun.rotation_z + time.dt*100
+
+    planet1.rotation_z = planet1.rotation_z + time.dt*100
+    planet2.rotation_z = planet2.rotation_z + time.dt*100
+
     print("distance :",distance(planet1.get_position(),moon1.get_position()))
 
     # print("moon : ", moon1.get_position())
