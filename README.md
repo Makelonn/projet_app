@@ -1,6 +1,6 @@
 # projet_app
 
-This project aim is to test diverse GUI Framework in Python. 
+This project aim is to test diverse GUI Frameworks in Python. 
 
 It is divided in 3 part :
 
