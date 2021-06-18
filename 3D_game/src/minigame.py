@@ -7,8 +7,8 @@ app = Ursina()
 window_size = window.size
 
 # Our player 
-g_path = Path(__file__).parent.parent / "asset" / "girl"
-g_model = load_model('girl OBJ.obj', path=g_path)
+g_path = Path(__file__).parent.parent / "asset"
+g_model = load_model('girl_OBJ.obj', path=g_path)
 player = Entity(model=g_model, texture= 'brick')
 player.collider = 'mesh'
 player.collider.show()
