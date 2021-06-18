@@ -17,11 +17,11 @@ planet1 = Entity(model='sphere', position=(0, 50, 0),
                  scale=5, double_sided=True, parent=rota_planet1)
 
 rota_planet2 = Entity(position=0)
-planet2 = Entity(model='sphere', position=(0, 50, 0),
+planet2 = Entity(model='sphere', position=(0, 30, 0),
                  scale=3, double_sided=True, parent=rota_planet2)
 
-rota_moon1 = Entity(position=planet1.position)
-moon1 = Entity(model='sphere', position=planet1.position+(0, 5, 0),
+rota_moon1 = Entity(position=planet1.get_position())
+moon1 = Entity(model='sphere', position=planet1.get_position()+(0, -40, 0),
                scale=2, double_sided=True, parent=rota_moon1)
 
 EditorCamera()
@@ -31,13 +31,17 @@ camera.orthographic = True
 def update():   # update gets automatically called.
 
     rota_planet1.rotation_z = rota_planet1.rotation_z + 0.5*time.dt*100
-    rota_planet2.rotation_z = rota_planet2.rotation_z + 1.5*time.dt*100
-    rota_moon1.rotation_z = rota_moon1.rotation_z + 0.25*time.dt*100
-    # rota_moon1.position = planet1.position
-    rota_moon1.set_position(planet1.get_position(), relative_to=camera)
-    print("moon : ", rota_moon1.get_position())
-    print("planet1 : ", planet1.get_position())
-    print("planet2 : ", planet2.get_position())
+    rota_planet2.rotation_z = rota_planet2.rotation_z + 1*time.dt*100
+
+    rota_moon1.set_position(planet1.get_position(), relative_to=scene)
+    rota_moon1.rotation_z = rota_moon1.rotation_z + 1.5*time.dt*100
+
+    print("distance :",distance(planet1.get_position(),moon1.get_position()))
+
+    # print("moon : ", moon1.get_position())
+    # print("moon posi: ", moon1.position)
+    # print("planet1 : ", planet1.get_position())
+    # print("planet2 : ", planet2.get_position())
 
 
 app.run()   # opens a window and starts the game.
