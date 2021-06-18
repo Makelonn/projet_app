@@ -8,6 +8,7 @@ window.fullscreen = False               # Do not go Fullscreen
 window.exit_button.visible = False
 # Show the FPS (Frames per second) counter
 window.fps_counter.enabled = True
+camera.z -= 40
 
 sun = Entity(model='sphere', position=0,
              scale=20, double_sided=True)
@@ -35,6 +36,11 @@ def update():   # update gets automatically called.
     sun.rotation_z = sun.rotation_z + time.dt*100
     planet1.rotation_z = planet1.rotation_z + time.dt*100
     planet2.rotation_z = planet2.rotation_z + time.dt*100
+
+    camera.x += held_keys['d'] * .5
+    camera.x -= held_keys['q'] * .5
+    camera.y += held_keys['z'] * .5
+    camera.y -= held_keys['s'] * .5
 
 
 app.run()   # opens a window and starts the game.
