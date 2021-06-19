@@ -33,7 +33,10 @@ class Voxel(Button):
     def input(self, key):
         if self.hovered:
             if key == 'left mouse down':
-                voxel = Voxel(position=self.position + mouse.normal)
+                voxel = Voxel(position=self.position +
+                              mouse.normal)
+                # voxel.collider = MeshCollider(
+                #     voxel, mesh=voxel.model, center=Vec3(self.position + mouse.normal))
 
             if key == 'right mouse down':
                 destroy(self)
@@ -42,7 +45,12 @@ class Voxel(Button):
 for z in range(8):
     for x in range(8):
         voxel = Voxel(position=(x, 0, z))
+        voxel = Voxel(position=(-x, 0, z))
+        voxel = Voxel(position=(x, 0, -z))
+        voxel = Voxel(position=(-x, 0, -z))
 
+# voxel.mesh_collider.collider = 'mesh'
+# voxel.mesh_collider.visible = False
 
 player = FirstPersonController()
 
@@ -50,8 +58,12 @@ player = FirstPersonController()
 def update():
     player.x += held_keys['d'] * .1
     player.x -= held_keys['q'] * .1
-    player.y += held_keys['z'] * .1
-    player.y -= held_keys['s'] * .1
+    player.z += held_keys['z'] * .1
+    player.z -= held_keys['s'] * .1
+    # scene.camera.x += held_keys['d'] * .1
+    # scene.camera.x -= held_keys['q'] * .1
+    # scene.camera.y += held_keys['z'] * .1
+    # scene.camera.y -= held_keys['s'] * .1
 
 
 app.run()
