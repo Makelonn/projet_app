@@ -20,7 +20,7 @@ camera.orthographic = True
 
 print("\n\n station folder :", station_folder)
 
-level = load_blender_scene('Space Station Scene',
+level = load_blender_scene('Space_Station_Scene',
                            path=station_folder)
 
 app.run()   # opens a window and starts the game.
