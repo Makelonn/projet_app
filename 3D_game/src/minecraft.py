@@ -49,8 +49,15 @@ for z in range(8):
         voxel = Voxel(position=(x, 0, -z))
         voxel = Voxel(position=(-x, 0, -z))
 
-# voxel.mesh_collider.collider = 'mesh'
-# voxel.mesh_collider.visible = False
+root_folder = Path(__file__).parent.parent
+asset_folder = root_folder / 'asset/'
+texture_folder = asset_folder / 'texture/'
+
+my_texture = load_texture("Chair.png", path=texture_folder)
+chair_model = load_model('Office_Chair.blend', path=asset_folder)
+
+chair = Entity(model=chair_model, texture=my_texture,
+               collider='box', position=Vec3(1, 1, 1), scale=1)
 
 player = FirstPersonController(speed=10)
 

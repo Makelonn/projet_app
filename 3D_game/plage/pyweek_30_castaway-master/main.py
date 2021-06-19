@@ -42,6 +42,7 @@ level.goat.collider = 'mesh'
 
 
 player = FirstPersonController(position=level.start_point.position, speed=10)
+# gère déplacemet automatiquement en wasd et avec le fichier settings.py ajoute les flèches directionnels
 level.start_point.enabled = False
 
 
