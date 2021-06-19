@@ -52,18 +52,6 @@ for z in range(8):
 # voxel.mesh_collider.collider = 'mesh'
 # voxel.mesh_collider.visible = False
 
-player = FirstPersonController()
-
-
-def update():
-    player.x += held_keys['d'] * .1
-    player.x -= held_keys['q'] * .1
-    player.z += held_keys['z'] * .1
-    player.z -= held_keys['s'] * .1
-    # scene.camera.x += held_keys['d'] * .1
-    # scene.camera.x -= held_keys['q'] * .1
-    # scene.camera.y += held_keys['z'] * .1
-    # scene.camera.y -= held_keys['s'] * .1
-
+player = FirstPersonController(speed=10)
 
 app.run()
