@@ -17,10 +17,14 @@ player.collider.show()
 title = Text(text='Welcome to the game !', origin=(0,-19))
 
 # A thing to go with player that will shout listen every 2 microsecond
-tv = Entity(model='sphere', texture="../asset/video.mp4", parent=player)
+tv = Entity(model='sphere', texture="../asset/video.mp4", scale=0.4, parent=player, origin=(0.5,1,0.5))
 # A surface ?
 ground = Entity(model=Terrain('heightmap_1'), scale=(70,5,70), texture='heightmap_1')
+ground.collider = 'mesh'
+ground.collider.show()
+
 EditorCamera()
+camera.z -= 200
 
 def update():   # update gets automatically called.
     player.x += held_keys['d'] * .1
