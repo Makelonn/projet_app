@@ -116,3 +116,52 @@ class Map:
                     )
                     tile[1][1] = tile[1][1] + TILESIZE
             self.shift[1] += 1
+
+    def get_closest_valid_tile(self, pos):
+        shifted_pos = [0, 0]
+
+        shifted_pos[0] = pos[0] - self.shift[0] * TILESIZE
+        shifted_pos[1] = pos[1] - self.shift[1] * TILESIZE
+        if (
+            self.width / 2 * TILESIZE >= shifted_pos[0]
+            and self.width / 4 * TILESIZE >= shifted_pos[1]
+        ):
+            b = shifted_pos[1] - 2 * shifted_pos[0]
+            x = (-b + (self.width / 2 * TILESIZE) / 2) / (1 / 2 + 2)
+            return (
+                int(x + self.shift[0] * TILESIZE),
+                int(2 * x + b + self.shift[1] * TILESIZE),
+            )
+
+        elif (
+            self.width * TILESIZE >= shifted_pos[0]
+            and self.width / 4 * TILESIZE >= shifted_pos[1]
+        ):
+            b = shifted_pos[1] + 2 * shifted_pos[0]
+            x = (-b - (self.width / 2 * TILESIZE) / 2) / (-1 / 2 - 2)
+            return (
+                int(x + self.shift[0] * TILESIZE),
+                int(-2 * x + b + self.shift[1] * TILESIZE),
+            )
+
+        elif (
+            self.width / 2 * TILESIZE >= shifted_pos[0]
+            and self.width / 2 * TILESIZE >= shifted_pos[1]
+        ):
+            b = 2 * shifted_pos[0] + shifted_pos[1]
+            x = ((self.width / 2 * TILESIZE) / 2 - b) / (-2 - 1 / 2)
+            return (
+                int(x + self.shift[0] * TILESIZE),
+                int(-2 * x + b + self.shift[1] * TILESIZE) - 35,
+            )
+
+        elif (
+            shifted_pos[0] >= self.width / 2 * TILESIZE
+            and shifted_pos[1] >= self.width / 4 * TILESIZE
+        ):
+            b = shifted_pos[1] - 2 * shifted_pos[0]
+            x = ((3 / 2 * self.width * TILESIZE) / 2 - b) / (2 + 1 / 2)
+            return (
+                int(x + self.shift[0] * TILESIZE),
+                int(2 * x + b + self.shift[1] * TILESIZE) - 45,
+            )
