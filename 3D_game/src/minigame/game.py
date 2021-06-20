@@ -1,4 +1,5 @@
 import ursina as ur
+from ursina.collider import BoxCollider
 from player import Player
 
 app = ur.Ursina()
@@ -11,10 +12,11 @@ player = Player()
 # A thing to go with player that will shout listen every 2 microsecond
 tv = ur.Entity(model='sphere', texture="../asset/video.mp4", scale=0.4, parent=player, origin=(1.5,-2,1.5))
 # A surface ?
-ground = ur.Entity(model=ur.Grid(25,25), scale=50, rotation_x=-90, texture='brick', color=ur.color.orange)
-wall = ur.Entity(model='cube', collider='box', scale_y=3, origin_y=-.5, color=ur.color.azure, x=-4)
-ground.collider='box'
-ground.collider.show()
+ground = ur.Entity(model=ur.Grid(25,25), collider='box', scale=50, rotation_x=-90, texture='brick', color=ur.color.orange)
+wall = ur.Entity(model='cube', scale_y=3, origin_y=-.5, color=ur.color.azure, x=-4)
+
+wall.collider = BoxCollider(wall, center=ur.Vec3(0,+.5,0))
+wall.collider.show()
 
 
 ur.EditorCamera()

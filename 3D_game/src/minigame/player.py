@@ -2,7 +2,7 @@ import ursina as ur
 
 class Player(ur.Entity):
     def __init__(self):
-        super().__init__(model='cube', color=ur.color.pink)
+        super().__init__(model='cube', color=ur.color.pink, on_click=self.mouse_clicked())
         self.collider = 'cube'
         self.collider.show()
         self.y += 3
@@ -23,6 +23,9 @@ class Player(ur.Entity):
         hit_info = ur.boxcast(origin , self.direction, thickness=(1,0.8), ignore=(self,), distance=.5, debug=True)
         if not hit_info.hit:
             self.position += self.direction * 5 * ur.time.dt
+
+    def mouse_clicked(self):
+        print("Oh u clicked on me !")
 
     def jmp(self):
         if self.in_air :
