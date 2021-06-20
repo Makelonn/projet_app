@@ -19,8 +19,8 @@ def update():   # update gets automatically called.
     player.y += held_keys['z'] * .1
     player.y -= held_keys['s'] * .1
 
-    # et ça tourne tourne toune c'est ta façon  d'aimer.
-    player.rotation_y = player.rotation_y + time.dt*100
 
+# et ça tourne tourne toune c'est ta façon  d'aimer.
+player.rotation_y = player.rotation_y + time.dt*100
 
 app.run()   # opens a window and starts the game.

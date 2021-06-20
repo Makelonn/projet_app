@@ -6,3 +6,4 @@ Petit programme utilisant PySimpleGUI pour créer des personnages de jeu de rôl
 
 * PySimpleGUI
 * PIL (pip install pillow)
+* Matplotlib

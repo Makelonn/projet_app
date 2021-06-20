@@ -33,7 +33,10 @@ class Voxel(Button):
     def input(self, key):
         if self.hovered:
             if key == 'left mouse down':
-                voxel = Voxel(position=self.position + mouse.normal)
+                voxel = Voxel(position=self.position +
+                              mouse.normal)
+                # voxel.collider = MeshCollider(
+                #     voxel, mesh=voxel.model, center=Vec3(self.position + mouse.normal))
 
             if key == 'right mouse down':
                 destroy(self)
@@ -42,16 +45,20 @@ class Voxel(Button):
 for z in range(8):
     for x in range(8):
         voxel = Voxel(position=(x, 0, z))
+        voxel = Voxel(position=(-x, 0, z))
+        voxel = Voxel(position=(x, 0, -z))
+        voxel = Voxel(position=(-x, 0, -z))
 
+root_folder = Path(__file__).parent.parent
+asset_folder = root_folder / 'asset/'
+texture_folder = asset_folder / 'texture/'
 
-player = FirstPersonController()
+my_texture = load_texture("Chair.png", path=texture_folder)
+chair_model = load_model('Office_Chair.blend', path=asset_folder)
 
+chair = Entity(model=chair_model, texture=my_texture,
+               collider='box', position=Vec3(1, 1, 1), scale=1)
 
-def update():
-    player.x += held_keys['d'] * .1
-    player.x -= held_keys['q'] * .1
-    player.y += held_keys['z'] * .1
-    player.y -= held_keys['s'] * .1
-
+player = FirstPersonController(speed=10)
 
 app.run()
