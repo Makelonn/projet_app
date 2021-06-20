@@ -20,7 +20,6 @@ wall.collider.show()
 
 
 ur.EditorCamera()
-ur.camera.y = 2
 
 def update():   # update gets automatically called.
     player.update()
