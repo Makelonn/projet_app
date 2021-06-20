@@ -3,7 +3,7 @@ import ursina as ur
 class Player(ur.Entity):
     def __init__(self):
         super().__init__(model='cube', texture='pink_shirt.png')
-        self.leg = ur.Entity(model='sphere', color=ur.color.pink, texture='wheel.png')
+        self.leg = ur.Entity(model='sphere', texture='wheel.png')
         self.children.append(self.leg)
         self.collider = 'cube'
         self.colliders = []
@@ -26,7 +26,8 @@ class Player(ur.Entity):
         hit_info = ur.boxcast(origin , self.direction, thickness=(1,0.8), ignore=(self,), distance=.5, debug=True)
         if not hit_info.hit:
             self.position += self.direction * 5 * ur.time.dt
-            self.leg.rotation_z += 60 *ur.time.dt
+            if(self.direction != ur.Vec3(0,0,0)):
+                self.leg.rotation += (self.direction[2]* 160 *ur.time.dt, 0, self.direction[0]* 160 *ur.time.dt) 
         self.updt_members()
 
     def jmp(self):
