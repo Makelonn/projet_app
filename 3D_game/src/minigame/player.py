@@ -19,8 +19,8 @@ class Player(ur.Entity):
         self.jmp()
 
         #Here we gonna use raycast to manage collision
-        origin = self.world_position + (self.up*.5)
-        hit_info = ur.raycast(origin , self.direction, ignore=(self,), distance=.5, debug=True)
+        origin = self.world_position + (0,0.1,0)
+        hit_info = ur.boxcast(origin , self.direction, thickness=(1,0.8), ignore=(self,), distance=.5, debug=True)
         if not hit_info.hit:
             self.position += self.direction * 5 * ur.time.dt
 
