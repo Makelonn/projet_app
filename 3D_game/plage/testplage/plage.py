@@ -25,8 +25,9 @@ def input(key):
             bullet, world_parent=camera, position=Vec3(-.2, 0, 0), rotation=Vec3(0, 0, 0))
         player.arrow.world_parent = scene
         player.arrow.animate('position', Vec3(
-            *mouse.world_point), mouse.collision.distance/500, curve=curve.linear, interrupt='kill')
+            mouse.world_point), mouse.collision.distance/500, curve=curve.linear, interrupt='kill')
         destroy(player.arrow, delay=2)
+
     if held_keys['control'] and key == 'r':
         player.position = level.start_point.position
 

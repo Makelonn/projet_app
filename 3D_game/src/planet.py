@@ -57,8 +57,8 @@ PointLight(parent=sun, x=0, y=0, z=0, shadows=True, color=color.white)
 
 def update():   # update gets automatically called.
 
-    rota_planet1.rotation_z = rota_planet1.rotation_z + 0.5*time.dt*100
-    rota_planet2.rotation_z = rota_planet2.rotation_z + 1*time.dt*100
+    # rota_planet1.rotation_z = rota_planet1.rotation_z + 0.5*time.dt*100
+    # rota_planet2.rotation_z = rota_planet2.rotation_z + 1*time.dt*100
 
     rota_moon1.set_position(planet1.get_position(), relative_to=scene)
     rota_moon1.rotation_z = rota_moon1.rotation_z + 0.25*time.dt*100
@@ -71,7 +71,7 @@ def update():   # update gets automatically called.
     camera.x += held_keys['d'] * .5 * factor_scale
     camera.x -= held_keys['q'] * .5 * factor_scale
     camera.y += held_keys['z'] * .5 * factor_scale
-    camera.y -= held_keys['s'] * .5 * factor_scale
+    camera.y += held_keys['s'] * .5 * factor_scale
     camera.z += held_keys['r'] * .5 * factor_scale
     camera.z -= held_keys['f'] * .5 * factor_scale
 
