@@ -8,6 +8,7 @@ import PySimpleGUI as sg
 from rts_map import Map, TILESIZE
 from player import Player
 from mouse_position import Mouse_position
+import datetime
 
 
 GAMEPLAY_SIZE = (1024, 768)
@@ -32,6 +33,7 @@ def game():
         ]
     ]
 
+    sleep_time = 10
     mouse_pos = Mouse_position()
     window = sg.Window("RTS", inner_layout, finalize=True)
 
@@ -78,9 +80,20 @@ def game():
         ),
     ]
     selection_rectangle = None
+    start = datetime.datetime.now()
+    last_post_read_time = start
+
     while True:
-        event, value = window.read()
-        print(event)
+        pre_read_time = datetime.datetime.now()
+        processing_time = (pre_read_time - last_post_read_time).total_seconds()
+        time_to_sleep = sleep_time - int(processing_time * 1000)
+        time_to_sleep = max(time_to_sleep, 0)
+        event, value = window.read(time_to_sleep)
+        now = datetime.datetime.now()
+        delta = (now - last_post_read_time).total_seconds()
+        last_post_read_time = now
+        for unit in units:
+            unit.update(delta)
         if event in (sg.WIN_CLOSED, "-QUIT-"):
             break
 
@@ -94,7 +107,6 @@ def game():
                 if unit.is_selected((mouse_pos.x, mouse_pos.y)):
                     unit.draw_selected()
                     selected_units.append(unit)
-                    print("break")
                     break
 
         elif event == "+LEFT MOTION+":
@@ -129,7 +141,6 @@ def game():
                             )
                         )
                     else:
-                        print("test")
                         new_pos = rts_map.get_closest_valid_tile(
                             (
                                 click_pos[0] - shift_from_init_pos[unit][0],
@@ -142,7 +153,6 @@ def game():
 
         elif event == "+RELEASED+" and motion:
             motion = False
-            print("released")
             if selection_rectangle:
                 graph_element.delete_figure(selection_rectangle)
             for unit in units:
