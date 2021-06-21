@@ -10,7 +10,7 @@ title = ur.Text(text='Welcome to the game !', origin=(0,-19))
 player = Player()
 
 # A thing to go with player that will shout listen every 2 microsecond
-tv = ur.Entity(model='sphere', texture="../asset/video.mp4", scale=0.4, parent=player, origin=(1.5,-2,1.5))
+tv = ur.Entity(model='sphere', texture="../asset/video.mp4", scale=0.4, parent=player, origin=(2,-2,2))
 # A surface ?
 ground = ur.Entity(model=ur.Grid(25,25), collider='box', scale=50, rotation_x=-90, texture='brick', color=ur.color.orange)
 wall = ur.Entity(model='cube', scale_y=3, origin_y=-.5, color=ur.color.azure, x=-4)
