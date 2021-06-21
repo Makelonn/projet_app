@@ -1,8 +1,0 @@
-input_handler.bind('up arrow', 'w')
-input_handler.bind('left arrow', 'a')
-input_handler.bind('down arrow', 's')
-input_handler.bind('right arrow', 'd')
-input_handler.bind('z', 'w')
-input_handler.bind('q', 'a')
-# input_handler.bind('down arrow', 's')
-# input_handler.bind('right arrow', 'd')
