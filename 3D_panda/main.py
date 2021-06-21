@@ -1,6 +1,6 @@
 from direct.showbase.ShowBase import ShowBase
 from direct.actor.Actor import Actor
-from panda3d.core import WindowProperties, DirectionalLight, Vec4
+from panda3d.core import WindowProperties, DirectionalLight, Vec4, Vec3
 
 class Game(ShowBase):
     def __init__(self):
@@ -40,6 +40,8 @@ class Game(ShowBase):
             "shoot" : False
         }
         self.accept_key_act()
+        # Task are routine than can be used several times 
+        self.updt_task = taskMgr.add(self.update, "update")
 
     def accept_key_act(self):
         # Managing deplacement
@@ -57,7 +59,18 @@ class Game(ShowBase):
 
     def updateKeyMap(self, keyBindName, controlState):
         self.keyBind[keyBindName] = controlState
-        print (keyBindName, "set to", controlState) 
+    
+    def update(self, task):
+        dt = globalClock.getDt() # Same use as in ursina
+        key_act = {"up" : Vec3(0, 5.0*dt, 0), "down" : Vec3(0, -5.0*dt, 0), "left" :Vec3(-5.0*dt, 0, 0), "right" : Vec3(5.0*dt, 0, 0)}
+        for k in key_act.keys() :
+            if self.keyBind[k]:
+                self.myActor.setPos(self.myActor.getPos() + key_act[k])
+                self.camera.setPos(self.camera.getPos() + key_act[k])
+        if self.keyBind["shoot"]:
+            print ("Zap!")
+
+        return task.cont #.cont so we can run the same task several time
 
 app = Game()
 app.run()
