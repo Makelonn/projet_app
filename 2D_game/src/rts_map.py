@@ -9,6 +9,14 @@ import PySimpleGUI as sg
 TILESIZE = 250
 
 
+def bounded_value(min, value, max):
+    if value < min:
+        return min
+    elif value > max:
+        return max
+    return value
+
+
 class Map:
     def __init__(self, graph: sg.Graph, size: tuple):
         self.graph = graph
@@ -129,30 +137,54 @@ class Map:
             b = shifted_pos[1] - 2 * shifted_pos[0]
             x = (-b + (self.width / 2 * TILESIZE) / 2) / (1 / 2 + 2)
             return (
-                int(x + self.shift[0] * TILESIZE),
-                int(2 * x + b + self.shift[1] * TILESIZE),
+                bounded_value(
+                    int(60 + self.shift[0] * TILESIZE),
+                    int(x + self.shift[0] * TILESIZE),
+                    int(self.width / 2 * TILESIZE + self.shift[0] * TILESIZE),
+                ),
+                bounded_value(
+                    int(self.shift[1] * TILESIZE),
+                    int(2 * x + b + self.shift[1] * TILESIZE),
+                    int(self.width / 4 * TILESIZE + self.shift[1] * TILESIZE),
+                ),
             )
 
         elif (
-            self.width * TILESIZE >= shifted_pos[0]
+            shifted_pos[0] > self.width * TILESIZE / 2
             and self.width / 4 * TILESIZE >= shifted_pos[1]
         ):
             b = shifted_pos[1] + 2 * shifted_pos[0]
             x = (-b - (self.width / 2 * TILESIZE) / 2) / (-1 / 2 - 2)
             return (
-                int(x + self.shift[0] * TILESIZE),
-                int(-2 * x + b + self.shift[1] * TILESIZE),
+                bounded_value(
+                    int(self.width / 2 * TILESIZE + self.shift[0] * TILESIZE),
+                    int(x + self.shift[0] * TILESIZE),
+                    int(self.width * TILESIZE + self.shift[0] * TILESIZE - 60),
+                ),
+                bounded_value(
+                    int(self.shift[1] * TILESIZE),
+                    int(-2 * x + b + self.shift[1] * TILESIZE),
+                    int(self.width / 4 * TILESIZE + self.shift[1] * TILESIZE),
+                ),
             )
 
         elif (
             self.width / 2 * TILESIZE >= shifted_pos[0]
-            and self.width / 2 * TILESIZE >= shifted_pos[1]
+            and shifted_pos[1] >= self.width / 4 * TILESIZE
         ):
             b = 2 * shifted_pos[0] + shifted_pos[1]
             x = ((self.width / 2 * TILESIZE) / 2 - b) / (-2 - 1 / 2)
             return (
-                int(x + self.shift[0] * TILESIZE),
-                int(-2 * x + b + self.shift[1] * TILESIZE) - 35,
+                bounded_value(
+                    int(60 + self.shift[0] * TILESIZE),
+                    int(x + self.shift[0] * TILESIZE),
+                    int(self.width / 2 * TILESIZE + self.shift[0] * TILESIZE),
+                ),
+                bounded_value(
+                    self.width / 4 * TILESIZE + self.shift[1] * TILESIZE,
+                    int(-2 * x + b + self.shift[1] * TILESIZE) - 35,
+                    self.width / 2 * TILESIZE + self.shift[1] * TILESIZE,
+                ),
             )
 
         elif (
@@ -162,6 +194,14 @@ class Map:
             b = shifted_pos[1] - 2 * shifted_pos[0]
             x = ((3 / 2 * self.width * TILESIZE) / 2 - b) / (2 + 1 / 2)
             return (
-                int(x + self.shift[0] * TILESIZE),
-                int(2 * x + b + self.shift[1] * TILESIZE) - 45,
+                bounded_value(
+                    int(self.width / 2 * TILESIZE + self.shift[0] * TILESIZE),
+                    int(x + self.shift[0] * TILESIZE),
+                    int(self.width * TILESIZE + self.shift[0] * TILESIZE - 60),
+                ),
+                bounded_value(
+                    int(self.width / 4 * TILESIZE + self.shift[1] * TILESIZE),
+                    int(2 * x + b + self.shift[1] * TILESIZE) - 45,
+                    int(self.width / 2 * TILESIZE + self.shift[1] * TILESIZE),
+                ),
             )
