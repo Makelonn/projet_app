@@ -14,4 +14,6 @@ The aim is to create a mini 2D game (isometric) rts like, and to use the framewo
 
 ## 3D game
 
-The idea is almost the same as for the 2D game, using Ursina Engine to create a game and evaluate the feasibility.
+The idea is almost the same as for the 2D game, to create a game and evaluate the feasibility.
+
+We will test Ursina Engine and Pandas 3D framework.
