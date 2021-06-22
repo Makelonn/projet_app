@@ -58,7 +58,7 @@ class Game(ShowBase):
         self.updt_task = taskMgr.add(self.update, "update")
 
         # Collision manager
-        self.traverser = CollisionTraverser()
+        self.cTrav = CollisionTraverser()
         self.pusher = CollisionHandlerPusher()
         # pusher  Handle collision when an object try to push through another
         # Now we create a collider for our player (we gonna use a sphere)
@@ -66,13 +66,13 @@ class Game(ShowBase):
         colliderN.addSolid(CollisionSphere(0, 0, 0, 0.3))
         collider = self.myActor.attachNewNode(colliderN)
         collider.show()
-        self.pusher.addCollider(collider, self.myActor)
-        self.traverser.addCollider(collider, self.pusher)
+        base.pusher.addCollider(collider, self.myActor)
+        base.cTrav.addCollider(collider, self.pusher)
         self.pusher.setHorizontal(True) # So the player donc go over wall
         self.init_collision_wall()
 
     def init_collision_wall(self):
-        """wall_list = [
+        wall_list = [
             (-8.0, 0, 0, 8.0, 0, 0, 0.2),
             (-8.0, 0, 0, 8.0, 0, 0, 0.2),
             (0, -8.0, 0, 0, 8.0, 0, 0.2),
@@ -84,31 +84,9 @@ class Game(ShowBase):
         for w in range(4) :
             solid = CollisionTube(*wall_list[w])
             node = CollisionNode("wall")
+            node.addSolid(solid)
             wall = render.attachNewNode(node)   
-            wall.setPos(*wall_pos[w])"""
-        wallSolid = CollisionTube(-8.0, 0, 0, 8.0, 0, 0, 0.2)
-        wallNode = CollisionNode("wall")
-        wallNode.addSolid(wallSolid)
-        wall = render.attachNewNode(wallNode)
-        wall.setY(8.0)
-
-        wallSolid = CollisionTube(-8.0, 0, 0, 8.0, 0, 0, 0.2)
-        wallNode = CollisionNode("wall")
-        wallNode.addSolid(wallSolid)
-        wall = render.attachNewNode(wallNode)
-        wall.setY(-8.0)
-
-        wallSolid = CollisionTube(0, -8.0, 0, 0, 8.0, 0, 0.2)
-        wallNode = CollisionNode("wall")
-        wallNode.addSolid(wallSolid)
-        wall = render.attachNewNode(wallNode)
-        wall.setX(8.0)
-
-        wallSolid = CollisionTube(0, -8.0, 0, 0, 8.0, 0, 0.2)
-        wallNode = CollisionNode("wall")
-        wallNode.addSolid(wallSolid)
-        wall = render.attachNewNode(wallNode)
-        wall.setX(-8.0)
+            wall.setPos(*wall_pos[w])
         
 
     def accept_key_act(self):
