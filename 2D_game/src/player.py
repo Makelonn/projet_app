@@ -17,6 +17,10 @@ class Player:
             filename="image/unit_1.png",
             location=(self.pos),
         )
+        self.test = self.graph.DrawImage(
+            filename="image/test_transparency.png",
+            location=(self.pos),
+        )
         self.delay = 0
         self.image_nbr = random.randint(1, 5)
         self.map = map

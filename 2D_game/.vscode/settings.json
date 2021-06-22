@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "C:\\Users\\Benjamin\\AppData\\Local\\Programs\\Python\\Python39\\python.exe"
+  "python.pythonPath": "C:\\Users\\Benjamin\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+  "editor.maxTokenizationLineLength": 2000000
 }
