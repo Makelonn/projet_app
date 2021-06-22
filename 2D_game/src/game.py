@@ -104,7 +104,6 @@ def game():
     sleep_time = 10
     mouse_pos = Mouse_position()
     window = sg.Window("RTS", inner_layout, finalize=True)
-
     window.TKroot.bind("<Motion>", mouse_pos.motion)
     window["-ABILITY 1-"].update(disabled=True, button_color="grey")
     window["-ABILITY 2-"].update(disabled=True, button_color="grey")
