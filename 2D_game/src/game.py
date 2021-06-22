@@ -18,21 +18,24 @@ from player import Player
 from mouse_position import Mouse_position
 import datetime
 
-
+# Constants
 GAMEPLAY_SIZE = (1024, 768)
 BACKGROUND_COLOR = "white"
 
 
 def game():
 
+    # Settings
     sg.theme("DarkAmber")
     sg.set_options(tooltip_font=("Courier 14"))
+    sleep_time = 10
+
+    # Column to align verticaly text and bar
     health_col = [
         [
             sg.Text(
                 "Health",
                 font="Courrier 24",
-                justification="right",
                 text_color="red",
             ),
         ],
@@ -48,9 +51,7 @@ def game():
     ]
     mana_col = [
         [
-            sg.Text(
-                "Mana", font="Courrier 24", justification="right", text_color="blue"
-            ),
+            sg.Text("Mana", font="Courrier 24", text_color="blue"),
         ],
         [
             sg.ProgressBar(
@@ -62,6 +63,9 @@ def game():
             ),
         ],
     ]
+
+    # positioning of elements in the window.
+    # Graph is used to draw the game and is in first row
     inner_layout = [
         [
             sg.Graph(
@@ -101,9 +105,13 @@ def game():
         ],
     ]
 
-    sleep_time = 10
+    # Mouse object to get x and y position of the cursor in the graph.
     mouse_pos = Mouse_position()
+
+    # Window object that is the main object of the program
     window = sg.Window("RTS", inner_layout, finalize=True)
+
+    # Event binding
     window.TKroot.bind("<Motion>", mouse_pos.motion)
     window["-ABILITY 1-"].update(disabled=True, button_color="grey")
     window["-ABILITY 2-"].update(disabled=True, button_color="grey")
@@ -119,12 +127,22 @@ def game():
     window.bind("<Up>", "+UP+")
     window.bind("<Down>", "+DOWN+")
 
+    # graph element to access it easier
     graph_element = window["-GRAPH-"]
 
+    # Array that will contains the selected unit object
     selected_units = []
+
+    # Dictionnary that will contains a shift for each selected unit to be sure that they won't superpose
     shift_from_init_pos = {}
+
+    # Map object
     rts_map = Map(graph_element, [8, 8])
+
+    # bool to know if the mouse was moving
     motion = False
+
+    # Array of current units
     units = [
         Player(
             graph_element,
@@ -136,27 +154,44 @@ def game():
         )
         for i in range(10)
     ]
+
+    # Id of the selection rectangle
     selection_rectangle = None
-    start = datetime.datetime.now()
-    last_post_read_time = start
+    # initial left click pos when a selection rectangle is up
     init_left_click_pos = None
 
+    # get initial time to update canvas
+    start = datetime.datetime.now()
+    last_post_read_time = start
+
+    # game loop
     while True:
+        # set the timeout for the window.read method
         pre_read_time = datetime.datetime.now()
         processing_time = (pre_read_time - last_post_read_time).total_seconds()
         time_to_sleep = sleep_time - int(processing_time * 1000)
         time_to_sleep = max(time_to_sleep, 0)
+
+        # main function of the loop wait for an event for time_to_sleep milliseconds
         event, value = window.read(time_to_sleep)
+
+        # Get time that read call took
         now = datetime.datetime.now()
         delta = (now - last_post_read_time).total_seconds()
         last_post_read_time = now
+
+        # Update units (movement and animation)
         for unit in units:
             unit.update(delta)
+
+        # Quit event
         if event in (sg.WIN_CLOSED, "-QUIT-"):
             break
 
+        # Left click on the graph : selection if a unit is near the cursor position
+        # Update the HUD if an unit has been selected
         elif event == "-GRAPH-+LEFT CLICK+":
-            shift_from_init_pos.clear()
+            # Reset the previous settings for the HUD
             window["-ABILITY 1-"].update(disabled=True, button_color="grey")
             window["-ABILITY 2-"].update(disabled=True, button_color="grey")
             window["-ATTACK-"].update(disabled=True, button_color="grey")
@@ -164,6 +199,8 @@ def game():
             window["-MANA-"].update(0)
             window["-MANA-"].set_tooltip(str(0))
             window["-HEALTH-"].set_tooltip(str(0))
+
+            shift_from_init_pos.clear()
             init_left_click_pos = [mouse_pos.x, mouse_pos.y]
             for unit in selected_units:
                 unit.unselected()
