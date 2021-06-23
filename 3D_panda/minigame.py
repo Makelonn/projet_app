@@ -9,10 +9,9 @@ from panda3d.core import (
     CollisionHandlerPusher,
     CollisionSphere,
     CollisionNode,
-    CollisionTube,
-    LPoint3f
+    CollisionTube
 )
-from entity import Player
+
 
 class Game(ShowBase):
     def __init__(self):
@@ -26,6 +25,16 @@ class Game(ShowBase):
         # .egg is human readable format -> converted to .bam by panda3d
         self.environment = loader.loadModel("Sample_model/Env/environment")
         self.environment.reparentTo(render)
+        # Actor = animated model
+        self.myActor = Actor(
+            "Sample_model/p3d/models/act_p3d_chan",
+            {"idle": "Sample_model/p3d/models/a_p3d_chan_idle"},
+        )
+        self.myActor.reparentTo(render)
+        # No we set position and camera : setPos, setScale, setHpr (rotation) can be usefull
+        self.myActor.setY(0)
+        self.myActor.setScale(0.75)
+        self.myActor.loop("idle")
         # Setting camera as 3rd person
         self.camera.setPos(0, -8, 8)
         self.camera.setP(-45)
@@ -45,16 +54,20 @@ class Game(ShowBase):
             "shoot": False,
         }
         self.accept_key_act()
-
         # Collision manager
-        # Note that the 2 names can't be changed (because its provided globally)
         self.cTrav = CollisionTraverser()
         self.pusher = CollisionHandlerPusher()
         # pusher  Handle collision when an object try to push through another
+        # Now we create a collider for our player (we gonna use a sphere)
+        colliderN = CollisionNode("player")
+        colliderN.addSolid(CollisionSphere(0, 0, 0, 0.3))
+        collider = self.myActor.attachNewNode(colliderN)
+        collider.show()
         self.pusher.setHorizontal(True) # So the player donc go over wall
+        base.pusher.addCollider(collider, self.myActor)
+        base.cTrav.addCollider(collider, self.pusher)
         self.init_collision_wall()
-        # We create a player
-        self.player = Player()
+
         # Task are routine than can be used several times
         self.updt_task = taskMgr.add(self.update, "update")
 
@@ -74,7 +87,6 @@ class Game(ShowBase):
             node.addSolid(solid)
             wall = render.attachNewNode(node)   
             wall.setPos(*wall_pos[w])
-            wall.show()
         
 
     def accept_key_act(self):
@@ -96,6 +108,18 @@ class Game(ShowBase):
 
     def update(self, task):
         dt = globalClock.getDt()  # Same use as in ursina
+        key_act = {
+            "up": Vec3(0, 5.0 * dt, 0),
+            "down": Vec3(0, -5.0 * dt, 0),
+            "left": Vec3(-5.0 * dt, 0, 0),
+            "right": Vec3(5.0 * dt, 0, 0),
+        }
+        for k in key_act.keys():
+            if self.keyBind[k]:
+                self.myActor.setPos(self.myActor.getPos() + key_act[k])
+                self.camera.setPos(self.camera.getPos() + key_act[k])
+        if self.keyBind["shoot"]:
+            print("Zap!")
 
         return task.cont  # .cont so we can run the same task several time
 
