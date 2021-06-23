@@ -23,12 +23,12 @@ class Game(ShowBase):
         # Camera not controlled by the mouse
         self.disable_mouse()
         # .egg is human readable format -> converted to .bam by panda3d
-        self.environment = loader.loadModel("Sample_model/Env/environment")
+        self.environment = loader.loadModel("simple_game/Sample_model/Env/environment")
         self.environment.reparentTo(render)
         # Actor = animated model
         self.myActor = Actor(
-            "Sample_model/p3d/models/act_p3d_chan",
-            {"idle": "Sample_model/p3d/models/a_p3d_chan_idle"},
+            "simple_game/Sample_model/p3d/models/act_p3d_chan",
+            {"idle": "simple_game/Sample_model/p3d/models/a_p3d_chan_idle"},
         )
         self.myActor.reparentTo(render)
         # No we set position and camera : setPos, setScale, setHpr (rotation) can be usefull

@@ -96,7 +96,7 @@ class Game(ShowBase):
 
     def update(self, task):
         dt = globalClock.getDt()  # Same use as in ursina
-
+        self.player.update(self.keyBind, dt)
         return task.cont  # .cont so we can run the same task several time
 
 
