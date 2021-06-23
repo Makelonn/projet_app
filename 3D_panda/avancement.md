@@ -16,14 +16,11 @@
 ### 8. Bouger la caméra
 ### 9. Faire bouger une forme géométrique
 - ### 9.1 En Translation
-
 ```py
 ```
 - ### 9.2 En Rotation
-- 
 ```py
 ```
-
 ### 10. Déformer une forme géo
 ### 11. Faire une forme complexe
 ### 12. Gestion des formes complexes
