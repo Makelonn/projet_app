@@ -40,6 +40,7 @@ class Entity():
                 fricVec *= fric
                 self.velocity += fricVec
         self.actor.setPos(self.actor.getPos() + self.velocity*dt)
+            
 
     def updt_Health(self, delta):
         self.health = max(0, min(self.m_health, self.health+delta))
@@ -70,8 +71,9 @@ class Player(Entity):
         base.cTrav.addCollider(self.collider, base.pusher)
         self.actor.loop("idle")
 
-    def update(self, keys, dt):
+    def update(self, keys, camera, dt):
         Entity.update(self, dt)
+        camera.setPos(camera.getPos() + self.velocity*dt)
         self.walking = False
         key_act = {
             "up": Vec3(0,self.acceleration*dt, 0),
@@ -101,4 +103,38 @@ class Player(Entity):
                 self.actor.loop("idle")
 
 class Enemy(Entity):
-    pass
+    def __init__(self):
+        Entity.__init__(self, Vec3(5,5,0),"Sample_model/SimpleEnemy/simpleEnemy",
+                              {
+                                  "spawn" : "Sample_model/SimpleEnemy/simpleEnemy-spawn",
+                                  "stand" : "Sample_model/SimpleEnemy/simpleEnemy-stand",
+                                  "walk" : "Sample_model/SimpleEnemy/simpleEnemy-walk",
+                              },
+                            4,
+                            8,
+                            "enemy")
+        self.value = 1
+        self.acceleration = 150.0
+        base.pusher.addCollider(self.collider, self.actor)
+        base.cTrav.addCollider(self.collider, base.pusher)
+        self.actor.loop("stand")
+
+    def update(self, player, dt):
+        Entity.update(self, dt)
+        self.act(player, dt)
+        #Animation
+        if self.walking:
+            idleControl = self.actor.getAnimControl("idle")
+            if idleControl.isPlaying():
+                idleControl.stop()
+            walkControl = self.actor.getAnimControl("walk")
+            if not walkControl.isPlaying():
+                self.actor.loop("walk")
+        else:
+            idleControl = self.actor.getAnimControl("idle")
+            if not idleControl.isPlaying():
+                self.actor.stop("walk")
+                self.actor.loop("idle")
+    
+    def act(self, player, dt):
+        pass
