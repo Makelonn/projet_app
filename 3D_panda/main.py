@@ -72,33 +72,21 @@ class Game(ShowBase):
         self.updt_task = taskMgr.add(self.update, "update")
 
     def init_collision_wall(self):
-        wallSolid = CollisionTube(-8.0, 0, 0, 8.0, 0, 0, 0.2)
-        wallNode = CollisionNode("wall")
-        wallNode.addSolid(wallSolid)
-        wall = render.attachNewNode(wallNode)
-        wall.setY(8.0)
-        wall.show()
-
-        wallSolid = CollisionTube(-8.0, 0, 0, 8.0, 0, 0, 0.2)
-        wallNode = CollisionNode("wall")
-        wallNode.addSolid(wallSolid)
-        wall = render.attachNewNode(wallNode)
-        wall.setY(-8.0)
-        wall.show()
-
-        wallSolid = CollisionTube(0, -8.0, 0, 0, 8.0, 0, 0.2)
-        wallNode = CollisionNode("wall")
-        wallNode.addSolid(wallSolid)
-        wall = render.attachNewNode(wallNode)
-        wall.setX(8.0)
-        wall.show()
-
-        wallSolid = CollisionTube(0, -8.0, 0, 0, 8.0, 0, 0.2)
-        wallNode = CollisionNode("wall")
-        wallNode.addSolid(wallSolid)
-        wall = render.attachNewNode(wallNode)
-        wall.setX(-8.0)
-        wall.show()
+        wall_list = [
+            (-8.0, 0, 0, 8.0, 0, 0, 0.2),
+            (-8.0, 0, 0, 8.0, 0, 0, 0.2),
+            (0, -8.0, 0, 0, 8.0, 0, 0.2),
+            (0, -8.0, 0, 0, 8.0, 0, 0.2)
+        ]
+        wall_pos = [
+            (0,8.0,0),(0,-8.0,0),(8.0,0,0),(-8.0,0,0)
+        ]
+        for w in range(4) :
+            solid = CollisionTube(*wall_list[w])
+            node = CollisionNode("wall")
+            node.addSolid(solid)
+            wall = render.attachNewNode(node)   
+            wall.setPos(*wall_pos[w])
         
 
     def accept_key_act(self):
