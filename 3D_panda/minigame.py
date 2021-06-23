@@ -42,7 +42,8 @@ class Game(ShowBase):
         light = DirectionalLight("main light")
         # Attaching the light to the scene:
         self.light = render.attachNewNode(light)
-        self.light.setHpr(45, -45, 0)  # We set the direction we want the light to be
+        # We set the direction we want the light to be
+        self.light.setHpr(45, -45, 0)
         render.setLight(self.light)
         render.setShaderAuto()
         # Managing events from user
@@ -63,7 +64,7 @@ class Game(ShowBase):
         colliderN.addSolid(CollisionSphere(0, 0, 0, 0.3))
         collider = self.myActor.attachNewNode(colliderN)
         collider.show()
-        self.pusher.setHorizontal(True) # So the player donc go over wall
+        self.pusher.setHorizontal(True)  # So the player donc go over wall
         base.pusher.addCollider(collider, self.myActor)
         base.cTrav.addCollider(collider, self.pusher)
         self.init_collision_wall()
@@ -79,15 +80,14 @@ class Game(ShowBase):
             (0, -8.0, 0, 0, 8.0, 0, 0.2)
         ]
         wall_pos = [
-            (0,8.0,0),(0,-8.0,0),(8.0,0,0),(-8.0,0,0)
+            (0, 8.0, 0), (0, -8.0, 0), (8.0, 0, 0), (-8.0, 0, 0)
         ]
-        for w in range(4) :
+        for w in range(4):
             solid = CollisionTube(*wall_list[w])
             node = CollisionNode("wall")
             node.addSolid(solid)
-            wall = render.attachNewNode(node)   
+            wall = render.attachNewNode(node)
             wall.setPos(*wall_pos[w])
-        
 
     def accept_key_act(self):
         # Managing deplacement
