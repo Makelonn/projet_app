@@ -1,5 +1,7 @@
 from direct.actor.Actor import Actor
-from panda3d.core import Vec3, CollisionNode, CollisionSphere
+from random import getrandbits
+from math import copysign
+from panda3d.core import Vec3, Vec2, CollisionNode, CollisionSphere
 FRICTION = 110.0
 
 class Entity():
@@ -20,6 +22,8 @@ class Entity():
         c_node = CollisionNode(colliderName)
         c_node.addSolid(CollisionSphere(0,0,0,0.3))
         self.collider = self.actor.attachNewNode(c_node)
+        base.pusher.addCollider(self.collider, self.actor)
+        base.cTrav.addCollider(self.collider, base.pusher)
         self.collider.show()
         # Setting a tag so it's easy to get back to the object when a collision occurs
         self.collider.setPythonTag('owner',self)
@@ -66,14 +70,10 @@ class Player(Entity):
                             5,
                             10,
                             "player")
-        self.actor.getChild(0).setH(180) #facing is the wrong way
-        base.pusher.addCollider(self.collider, self.actor)
-        base.cTrav.addCollider(self.collider, base.pusher)
         self.actor.loop("idle")
 
     def update(self, keys, camera, dt):
         Entity.update(self, dt)
-        camera.setPos(camera.getPos() + self.velocity*dt)
         self.walking = False
         key_act = {
             "up": Vec3(0,self.acceleration*dt, 0),
@@ -81,13 +81,18 @@ class Player(Entity):
             "left": Vec3(-self.acceleration*dt, 0, 0),
             "right": Vec3(self.acceleration*dt, 0, 0)
         }
+        key_facing = {
+            "up" : 180, "down": 0, "left": 270, "right" : 90
+        }
         for k in key_act.keys():
             if keys[k]:
                 self.walking = True
                 self.velocity += key_act[k]
+                self.actor.getChild(0).setH(key_facing[k])
         if keys["shoot"]:
             print("Zap!")
-
+        camera.setX(self.actor.getX())
+        camera.setY(self.actor.getY()-8)
         #Animation
         if self.walking:
             idleControl = self.actor.getAnimControl("idle")
@@ -115,26 +120,99 @@ class Enemy(Entity):
                             "enemy")
         self.value = 1
         self.acceleration = 150.0
-        base.pusher.addCollider(self.collider, self.actor)
-        base.cTrav.addCollider(self.collider, base.pusher)
+        self.attack_distance = 1
+        self.detect_distance = 3
         self.actor.loop("stand")
 
-    def update(self, player, dt):
+    def update(self, p_actor, dt):
         Entity.update(self, dt)
-        self.act(player, dt)
+        self.act(p_actor, dt)
         #Animation
         if self.walking:
-            idleControl = self.actor.getAnimControl("idle")
-            if idleControl.isPlaying():
-                idleControl.stop()
             walkControl = self.actor.getAnimControl("walk")
             if not walkControl.isPlaying():
                 self.actor.loop("walk")
         else:
-            idleControl = self.actor.getAnimControl("idle")
-            if not idleControl.isPlaying():
-                self.actor.stop("walk")
-                self.actor.loop("idle")
+            spawnControl = self.actor.getAnimControl("spawn")
+            
+            if spawnControl is None or not spawnControl.isPlaying():
+                standControl = self.actor.getAnimControl("stand")
+                if not standControl.isPlaying():
+                    self.actor.stop("walk")
+                    self.actor.loop("stand")
     
-    def act(self, player, dt):
-        pass
+    def act(self, p_actor, dt):
+        v_toPlayer3 =p_actor.getPos()-self.actor.getPos()
+        v_toPlayer2 = v_toPlayer3.getXy()
+        distancePlayer = v_toPlayer2.length()
+        if not distancePlayer > self.detect_distance :
+            self.actor.setH(Vec2(0,1).signedAngleDeg(v_toPlayer2))
+            if distancePlayer > self.attack_distance :
+                self.walking = True
+                v_toPlayer3.setZ(0)
+                v_toPlayer3.normalize()
+                self.velocity += v_toPlayer3*self.acceleration*dt
+            else:
+                #Attacking ?
+                self.walking = False
+                self.velocity.set(0,0,0)
+        else:
+            self.walking = False
+            self.velocity.set(0,0,0)
+
+
+class Trap(Entity):
+    def __init__(self):
+        Entity.__init__(self, Vec3(-2,7,0),
+           "Sample_model/SlidingTrap/trap",
+           {
+               "walk" : "Sample_model/SlidingTrap/trap-walk",
+               "stand" : "Sample_model/SlidingTrap/trap-stand"
+           },
+           100.0,
+           10.0,
+           "trap"    
+        )
+        self.value = 1
+        self.acceleration = 100.0
+        self.detect_distance = 0.5
+        self.walking = False
+        self.ignorePlayer = False
+        self.movement = 0
+        self.movingAlongX = bool(getrandbits(1))
+
+    def update(self, p_actor, dt):
+        Entity.update(self, dt)
+        self.act(p_actor, dt)
+        if self.walking:
+            walkingControl = self.actor.getAnimControl("walk")
+            if not walkingControl.isPlaying():
+                self.actor.loop("walk")
+        else:
+            spawnControl = self.actor.getAnimControl("spawn")
+            if spawnControl is None or not spawnControl.isPlaying():
+                attackControl = self.actor.getAnimControl("attack")
+                if attackControl is None or not attackControl.isPlaying():
+                    standControl = self.actor.getAnimControl("stand")
+                    if not standControl.isPlaying():
+                        self.actor.loop("stand")
+
+    def act(self, p_actor, dt):
+        if self.movement != 0:
+            self.walking = True
+            if self.movingAlongX :
+                self.velocity.addX(self.movement*self.acceleration*dt)
+            else :
+                self.velocity.addY(self.movement*self.acceleration*dt)
+        else :
+            self.walking = False
+            v_toPlayer = (p_actor.getPos() - self.actor.getPos()).getXy()
+            if self.movingAlongX :
+                detect = v_toPlayer.y
+                move = v_toPlayer.x
+            else :
+                detect = v_toPlayer.x
+                move = v_toPlayer.y
+            if abs(detect) < 0.5 :
+                self.movement = copysign(1, move)
+        

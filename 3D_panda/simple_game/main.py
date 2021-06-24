@@ -12,7 +12,7 @@ from panda3d.core import (
     CollisionTube,
     LPoint3f
 )
-from entity import Player
+from entity import Player, Enemy, Trap
 
 class Game(ShowBase):
     def __init__(self):
@@ -55,6 +55,14 @@ class Game(ShowBase):
         self.init_collision_wall()
         # We create a player
         self.player = Player()
+        # Enemies
+        self.enemy = Enemy()
+        self.trap = Trap()
+        self.pusher.add_in_pattern("%fn-into-%in")
+        self.accept("trap-into-wall", self.stopTrap)
+        self.accept("trap-into-trapEnemy", self.stopTrap)
+        self.accept("trap-into-player", self.trapHitsSomething)
+        self.accept("trap-into-walkingEnemy", self.trapHitsSomething)
         # Task are routine than can be used several times
         self.updt_task = taskMgr.add(self.update, "update")
 
@@ -97,8 +105,32 @@ class Game(ShowBase):
     def update(self, task):
         dt = globalClock.getDt()  # Same use as in ursina
         self.player.update(self.keyBind,self.camera, dt)
+        self.enemy.update(self.player.actor, dt)
+        self.trap.update(self.player.actor, dt)
         return task.cont  # .cont so we can run the same task several time
 
+    def stopTrap(self, entry):
+        coll = entry.getFromNodePath()
+        if coll.hasPythonTag("owner"):
+            its_a_trap = coll.getPythonTag("owner")
+            its_a_trap.movement = 0
+            its_a_trap.ignorePlayer = False
+
+    def trapHitsSomething(self, entry):
+        coll = entry.getFromNodePath()
+        if coll.hasPythonTag("owner"):
+            trap = coll.getPythonTag("owner")
+            if trap.movement == 0:
+                return
+            coll = entry.getIntoNodePath()
+            if coll.hasPythonTag("owner"):
+                obj = coll.getPythonTag("owner")
+                if isinstance(obj, Player):
+                    if not trap.ignorePlayer:
+                        obj.updt_Health(-1)
+                        trap.ignorePlayer = True
+                else:
+                    obj.updt_Health(-10)
 
 app = Game()
 app.run()
