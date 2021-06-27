@@ -84,22 +84,24 @@ def game():
                 "Attack",
                 key="-ATTACK-",
                 font="Courier 24",
-                disabled_button_color="grey",
+                disabled_button_color="black",
                 tooltip="Inflict damage to ennemy",
             ),
             sg.Button(
-                "Ability 1",
-                key="-ABILITY 1-",
+                key="-ACID ARROW-",
                 font="Courier 24",
-                disabled_button_color="grey",
-                tooltip="Use your amazing ability 1",
+                disabled_button_color="black",
+                tooltip="Poison your ennemy",
+                image_filename="image/acid_arrow_icon.png",
+                image_subsample=2,
             ),
             sg.Button(
-                "Ability 2",
-                key="-ABILITY 2-",
+                key="-FIRE BALL-",
                 font="Courier 24",
-                disabled_button_color="grey",
-                tooltip="Use your amazing ability 2",
+                disabled_button_color="black",
+                tooltip="Burn your ennemy",
+                image_filename="image/fireball_icon.png",
+                image_subsample=2,
             ),
             sg.Column(mana_col),
         ],
@@ -113,8 +115,8 @@ def game():
 
     # Event binding
     window.TKroot.bind("<Motion>", mouse_pos.motion)
-    window["-ABILITY 1-"].update(disabled=True, button_color="grey")
-    window["-ABILITY 2-"].update(disabled=True, button_color="grey")
+    window["-ACID ARROW-"].update(disabled=True, button_color="grey")
+    window["-FIRE BALL-"].update(disabled=True, button_color="grey")
     window["-ATTACK-"].update(disabled=True, button_color="grey")
     window["-GRAPH-"].bind("<Button-1>", "+LEFT CLICK+")
     window["-GRAPH-"].bind("<Button-3>", "+RIGHT CLICK+")
@@ -152,7 +154,7 @@ def game():
                 rts_map.id_array[0][0][1][1],
             ],
         )
-        for i in range(10)
+        for i in range(1)
     ]
 
     # Id of the selection rectangle
@@ -192,8 +194,8 @@ def game():
         # Update the HUD if an unit has been selected
         elif event == "-GRAPH-+LEFT CLICK+":
             # Reset the previous settings for the HUD
-            window["-ABILITY 1-"].update(disabled=True, button_color="grey")
-            window["-ABILITY 2-"].update(disabled=True, button_color="grey")
+            window["-ACID ARROW-"].update(disabled=True, button_color="grey")
+            window["-FIRE BALL-"].update(disabled=True, button_color="grey")
             window["-ATTACK-"].update(disabled=True, button_color="grey")
             window["-HEALTH-"].update(0)
             window["-MANA-"].update(0)
@@ -214,10 +216,10 @@ def game():
                         window["-MANA-"].update(unit.mana)
                         window["-MANA-"].set_tooltip(str(unit.mana))
                         window["-HEALTH-"].set_tooltip(str(unit.health))
-                        window["-ABILITY 1-"].update(
+                        window["-ACID ARROW-"].update(
                             disabled=False, button_color="beige"
                         )
-                        window["-ABILITY 2-"].update(
+                        window["-FIRE BALL-"].update(
                             disabled=False, button_color="beige"
                         )
                         window["-ATTACK-"].update(disabled=False, button_color="beige")

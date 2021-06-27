@@ -6,7 +6,7 @@
 
 import PySimpleGUI as sg
 
-TILESIZE = 250
+TILESIZE = 512
 
 
 def bounded_value(min, value, max):
@@ -31,7 +31,7 @@ class Map:
                 self.id_array[width].append(
                     (
                         self.graph.DrawImage(
-                            filename="image/tile_iso.png",
+                            filename="image/tile_iso2.png",
                             location=(
                                 1 / 2 * width * TILESIZE + 1 / 2 * height * TILESIZE,
                                 1
