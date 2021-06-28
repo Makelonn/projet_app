@@ -217,31 +217,9 @@ def game():
 
         # Left click on the graph : selection if a unit is near the cursor position
         # Update the HUD if an unit has been selected
-        elif event == "-GRAPH-+LEFT CLICK+":
+        if event == "-GRAPH-+LEFT CLICK+":
             # Reset the previous settings for the HUD
-            window["-ACID ARROW-"].update(
-                disabled=True,
-                button_color="grey",
-                image_filename="image/acid_arrow_icon.png",
-                image_subsample=2,
-            )
-            window["-FIRE BALL-"].update(
-                disabled=True,
-                button_color="grey",
-                image_filename="image/fireball_icon.png",
-                image_subsample=2,
-            )
-            window["-ATTACK-"].update(
-                disabled=True,
-                button_color="grey",
-                image_filename="image/sword.png",
-                image_subsample=2,
-            )
 
-            window["-HEALTH-"].update(0)
-            window["-MANA-"].update(0)
-            window["-MANA-"].set_tooltip(str(0))
-            window["-HEALTH-"].set_tooltip(str(0))
             shift_from_init_pos.clear()
             init_left_click_pos = [mouse_pos.x, mouse_pos.y]
             for unit in selected_units:
