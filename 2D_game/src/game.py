@@ -4,6 +4,7 @@
     Small POC of rts game made in PySimpleGUI
 """
 
+from itertools import count
 from tkinter.constants import DISABLED
 from typing import Text
 import PySimpleGUI as sg
@@ -81,11 +82,12 @@ def game():
         [
             sg.Column(health_col),
             sg.Button(
-                "Attack",
                 key="-ATTACK-",
                 font="Courier 24",
                 disabled_button_color="black",
                 tooltip="Inflict damage to ennemy",
+                image_filename="image/sword.png",
+                image_subsample=2,
             ),
             sg.Button(
                 key="-ACID ARROW-",
@@ -111,7 +113,7 @@ def game():
     mouse_pos = Mouse_position()
 
     # Window object that is the main object of the program
-    window = sg.Window("RTS", inner_layout, finalize=True)
+    window = sg.Window("RTS", inner_layout, element_justification="c", finalize=True)
 
     # Event binding
     window.TKroot.bind("<Motion>", mouse_pos.motion)
@@ -154,14 +156,15 @@ def game():
                 rts_map.id_array[0][0][1][1],
             ],
         )
-        for i in range(1)
+        for i in range(10)
     ]
 
     # Id of the selection rectangle
     selection_rectangle = None
     # initial left click pos when a selection rectangle is up
     init_left_click_pos = None
-
+    count_anim = 1
+    time_from_last = 0
     # get initial time to update canvas
     start = datetime.datetime.now()
     last_post_read_time = start
@@ -177,6 +180,10 @@ def game():
         # main function of the loop wait for an event for time_to_sleep milliseconds
         event, value = window.read(time_to_sleep)
 
+        # Quit event
+        if event in (sg.WIN_CLOSED, "-QUIT-"):
+            break
+
         # Get time that read call took
         now = datetime.datetime.now()
         delta = (now - last_post_read_time).total_seconds()
@@ -185,18 +192,49 @@ def game():
         # Update units (movement and animation)
         for unit in units:
             unit.update(delta)
-
-        # Quit event
-        if event in (sg.WIN_CLOSED, "-QUIT-"):
-            break
+        if len(selected_units) == 1:
+            time_from_last += delta
+            if time_from_last > 0.2:
+                time_from_last = 0
+                window["-ATTACK-"].update(
+                    image_filename="image/sword_" + str(count_anim) + ".png",
+                    image_subsample=2,
+                )
+                window["-ACID ARROW-"].update(
+                    image_filename="image/acid_arrow_icon_" + str(count_anim) + ".png",
+                    image_subsample=2,
+                )
+                window["-FIRE BALL-"].update(
+                    image_filename="image/fireball_icon_" + str(count_anim) + ".png",
+                    image_subsample=2,
+                )
+                count_anim += 1
+                if count_anim > 2:
+                    count_anim = 1
 
         # Left click on the graph : selection if a unit is near the cursor position
         # Update the HUD if an unit has been selected
         elif event == "-GRAPH-+LEFT CLICK+":
             # Reset the previous settings for the HUD
-            window["-ACID ARROW-"].update(disabled=True, button_color="grey")
-            window["-FIRE BALL-"].update(disabled=True, button_color="grey")
-            window["-ATTACK-"].update(disabled=True, button_color="grey")
+            window["-ACID ARROW-"].update(
+                disabled=True,
+                button_color="grey",
+                image_filename="image/acid_arrow_icon.png",
+                image_subsample=2,
+            )
+            window["-FIRE BALL-"].update(
+                disabled=True,
+                button_color="grey",
+                image_filename="image/fireball_icon.png",
+                image_subsample=2,
+            )
+            window["-ATTACK-"].update(
+                disabled=True,
+                button_color="grey",
+                image_filename="image/sword.png",
+                image_subsample=2,
+            )
+
             window["-HEALTH-"].update(0)
             window["-MANA-"].update(0)
             window["-MANA-"].set_tooltip(str(0))
