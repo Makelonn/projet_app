@@ -64,7 +64,6 @@ Ici le joueur se déplace à l'aide des touches ZQSD.
 </p>
 
 - ### 9.2 En Rotation
-- 
 ```py
 player.rotation_y = player.rotation_y + time.dt*100
 ```
@@ -75,7 +74,7 @@ La rotation du <i>player</i> est gérée par une varible que l'on incrémente au
 
 ### 10. Déformer une forme géo
 
-On peut déformer les formes selons x,y,z assez facilement grâce à l'attribut `scale`.
+On peut déformer les formes selons x,y,z assez facilement grâce à l'attribut `scale`. 
 
 ### 11. Faire une forme complexe
 
@@ -169,6 +168,7 @@ app.run()   # opens a window and starts the game.
 
 On peut créer un sol de 2 façons :
 - Avec un objet de sol, de préférence avec une épaisseur (pour éviter les lags/bugs ou on tombe dans le sol)
+
 - En limitant la hauteur des joueurs
 
 ```py

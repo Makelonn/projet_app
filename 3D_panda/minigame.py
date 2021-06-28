@@ -23,12 +23,12 @@ class Game(ShowBase):
         # Camera not controlled by the mouse
         self.disable_mouse()
         # .egg is human readable format -> converted to .bam by panda3d
-        self.environment = loader.loadModel("Sample_model/Env/environment")
+        self.environment = loader.loadModel("simple_game/Sample_model/Env/environment")
         self.environment.reparentTo(render)
         # Actor = animated model
         self.myActor = Actor(
-            "Sample_model/p3d/models/act_p3d_chan",
-            {"idle": "Sample_model/p3d/models/a_p3d_chan_idle"},
+            "simple_game/Sample_model/p3d/models/act_p3d_chan",
+            {"idle": "simple_game/Sample_model/p3d/models/a_p3d_chan_idle"},
         )
         self.myActor.reparentTo(render)
         # No we set position and camera : setPos, setScale, setHpr (rotation) can be usefull
@@ -42,7 +42,8 @@ class Game(ShowBase):
         light = DirectionalLight("main light")
         # Attaching the light to the scene:
         self.light = render.attachNewNode(light)
-        self.light.setHpr(45, -45, 0)  # We set the direction we want the light to be
+        # We set the direction we want the light to be
+        self.light.setHpr(45, -45, 0)
         render.setLight(self.light)
         render.setShaderAuto()
         # Managing events from user
@@ -54,9 +55,6 @@ class Game(ShowBase):
             "shoot": False,
         }
         self.accept_key_act()
-        # Task are routine than can be used several times
-        self.updt_task = taskMgr.add(self.update, "update")
-
         # Collision manager
         self.cTrav = CollisionTraverser()
         self.pusher = CollisionHandlerPusher()
@@ -66,10 +64,13 @@ class Game(ShowBase):
         colliderN.addSolid(CollisionSphere(0, 0, 0, 0.3))
         collider = self.myActor.attachNewNode(colliderN)
         collider.show()
+        self.pusher.setHorizontal(True)  # So the player donc go over wall
         base.pusher.addCollider(collider, self.myActor)
         base.cTrav.addCollider(collider, self.pusher)
-        self.pusher.setHorizontal(True) # So the player donc go over wall
         self.init_collision_wall()
+
+        # Task are routine than can be used several times
+        self.updt_task = taskMgr.add(self.update, "update")
 
     def init_collision_wall(self):
         wall_list = [
@@ -79,15 +80,14 @@ class Game(ShowBase):
             (0, -8.0, 0, 0, 8.0, 0, 0.2)
         ]
         wall_pos = [
-            (0,8.0,0),(0,-8.0,0),(8.0,0,0),(-8.0,0,0)
+            (0, 8.0, 0), (0, -8.0, 0), (8.0, 0, 0), (-8.0, 0, 0)
         ]
-        for w in range(4) :
+        for w in range(4):
             solid = CollisionTube(*wall_list[w])
             node = CollisionNode("wall")
             node.addSolid(solid)
-            wall = render.attachNewNode(node)   
+            wall = render.attachNewNode(node)
             wall.setPos(*wall_pos[w])
-        
 
     def accept_key_act(self):
         # Managing deplacement

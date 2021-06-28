@@ -120,17 +120,26 @@ Voici des visuels de thèmes que l'on peut retrouver (ce n'est qu'une petite par
 
 Comme `PySimpleGUI` est lié à `Tkinter`, il est aussi possible d'intégrer des graphs Matplotlib dans le GUI, à travers des `FigureCanvasTkAgg`.
 
+**Plusieurs fenêtres**
+
+Il est tout à faire possible de réaliser un programme avec plusieurs fenêtres simultanées, et il y a une fonction intégrée qui détecte les évènements et sur quelle fenêtre ces derniers interviennent. Il est également possible de désactiver certaines fenêtre pendant l'utilisation d'autres.
 <br/>
 
-### __V. Avantages et inconvénients__
-* Documentation très fournie
-* Erreurs explicites
-* Fouillis pour beaucoup d'éléments mais pareil pour Tkinter 
-* Très customisable : on peut modifier les thèmes, les différents boutons ou quoi jusqu'à assez profond, choisir quel niveau de détection pour les évènements
+### __VI. Les autres versions de PySimpleGUI__
+
+Le module existe avec différents backends, comme `Tkinter`, `Wx` ou `Qt`, mais ces derniers sont très limités : 
+    - Ils possèdent moins de widgets 
+    - Ils sont parfois buggés (comme la version web)
+
+De manière générale, comme `PySimpeGUI` a été créé pour utiliser `Tkinter`, il vaut mieux le privilégier pour un projet.
+
+*Remarque : changer de backend en cours de route est quasi-impossible, surtout si on commence avec Tkinter*
+
+### __VII. Avantages et inconvénients__
 
 **Les points positifs** :
 
-* **Documentation très fournie** : bien que le module soit tenu par une seule personne, la documentation sur le sujet est très fournie notamment sur le site `https://pysimplegui.readthedocs.io/``qui regroupe des tutoriels, des notions, la liste des appels et des classes, le tout très bien expliqué.
+* **Documentation très fournie** : bien que le module soit tenu par une seule personne, la documentation sur le sujet est très fournie notamment sur le site `https://pysimplegui.readthedocs.io/``qui regroupe des tutoriels, des notions, la liste des appels et des classes, le tout très bien expliqué. En plus d'une partie sur la liste de toutes les fonctions, il y a un "cookbook" qui permet de prendre en main le tout avec du code extrêmement bien expliqué et une vingtaines d'exemples de programmes qui sont utile.
 * **Erreurs explicites** : le module fournit des erreurs assez explicites et propose des corrections ou des choses à vérifier à chaque erreurs, ce qui permet de débugger très rapidement les applications.
 * **Relativement customisable** : le module possède beaucoup d'options de customisation, il est possible de quasiment tout faire et modifier 
 
@@ -138,3 +147,4 @@ Comme `PySimpleGUI` est lié à `Tkinter`, il est aussi possible d'intégrer des
 
 * **Code parfois "fouilli"** : quand on fait des grandes applications avec énormement de widgets, le principe des listes imbriquées géantes peut perdre de ses avantages, et il est dur de se retrouver dans le code
 * **Parfois peu intuitif** : ce point est discutable, mais parfois il n'est pas intuitif que chaque widget ne soit pas affecté à une variable en Python, et que l'on fasse référence à ces derniers par des clés (cela peut perdre les débutants) et lorsque on lit `if event=='-WIDGET-'` on peut interpréter "si l'évènement est un widget" à la place de "si l'évènement se produit sur le widget". Au final, ce sont pleins de petits détails dans la syntaxe du module qui peuvent parfois être un peu confus pour des débutants en Python.  
+* **Les backend autres que Tkinter sont mauvais** : il est impossible de chagner de backend (Tkinter, WxPython, Qt) en cours de route car certaines fonctions ont d'autres noms ou ne sont tout simplement pas présentes selon les versions, parfois ce ne sont que simples mots-clés dans les arguments de fonctions mais c'est très pénible. La librairie est très orientée pour utiliser `Tkinter`.
