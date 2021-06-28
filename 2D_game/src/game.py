@@ -163,6 +163,7 @@ def game():
     selection_rectangle = None
     # initial left click pos when a selection rectangle is up
     init_left_click_pos = None
+    # variable to animate buttons
     count_anim = 1
     time_from_last = 0
     # get initial time to update canvas
@@ -192,6 +193,8 @@ def game():
         # Update units (movement and animation)
         for unit in units:
             unit.update(delta)
+
+        # Update buttons (animation)
         if len(selected_units) == 1:
             time_from_last += delta
             if time_from_last > 0.2:
@@ -239,15 +242,17 @@ def game():
             window["-MANA-"].update(0)
             window["-MANA-"].set_tooltip(str(0))
             window["-HEALTH-"].set_tooltip(str(0))
-
             shift_from_init_pos.clear()
             init_left_click_pos = [mouse_pos.x, mouse_pos.y]
             for unit in selected_units:
                 unit.unselected()
             selected_units.clear()
+
+            # Select unit under the cursor if there is one
             for unit in units:
                 if mouse_pos.x:
                     if unit.is_selected((mouse_pos.x, mouse_pos.y)):
+                        # Update HUD to give unit information
                         unit.draw_selected()
                         selected_units.append(unit)
                         window["-HEALTH-"].update(unit.health)
@@ -263,6 +268,8 @@ def game():
                         window["-ATTACK-"].update(disabled=False, button_color="beige")
                         break
 
+        # Left click on the graph and motion
+        # Redraw the selection rectangle
         elif event == "-GRAPH-+LEFT MOTION+":
             if not init_left_click_pos:
                 init_left_click_pos = [mouse_pos.x, mouse_pos.y]
@@ -277,6 +284,8 @@ def game():
                 line_color="red",
                 line_width=1,
             )
+        # Move the selected units to the cursor if the cursor position is valid
+        # If not get the closest valid position
         elif event == "-GRAPH-+RIGHT CLICK+":
             if not rts_map.is_valid_tile((mouse_pos.x, mouse_pos.y)):
                 click_pos = rts_map.get_closest_valid_tile((mouse_pos.x, mouse_pos.y))
@@ -308,6 +317,8 @@ def game():
                 elif unit:
                     unit.move(click_pos)
 
+        # Left click released after motion
+        # Select all units that are contained in the selection rectangle
         elif event == "-GRAPH-+RELEASED+" and motion:
             motion = False
             if selection_rectangle:
@@ -330,7 +341,7 @@ def game():
                             init_left_click_pos[0] - unit.pos[0],
                             init_left_click_pos[1] - unit.pos[1],
                         )
-
+        # move map
         elif event in ("+LEFT+", "+RIGHT+", "+UP+", "+DOWN+"):
             rts_map.move_map(event)
             for unit in units:
